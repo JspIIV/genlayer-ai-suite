@@ -1,14 +1,288 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/genlayer-ai-suite/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GenLayer AI Suite</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module" crossorigin src="/genlayer-ai-suite/assets/index-8O131N1j.js"></script>
-  </head>
-  <body>
-    <div id="app"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GenLayer AI Suite</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:#0a0a0f;color:#e2e8f0;font-family:system-ui,sans-serif;min-height:100vh;}
+    .header{background:#111827;border-bottom:1px solid #1f2937;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{background:#7c3aed;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white;}
+    .badge{background:#1e1b2e;color:#a78bfa;font-size:12px;padding:2px 10px;border-radius:20px;}
+    .tabs{padding:20px 24px 0;display:flex;gap:8px;max-width:900px;margin:0 auto;flex-wrap:wrap;}
+    .tab{padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;border:none;}
+    .tab.active{background:#7c3aed;color:white;}
+    .tab.inactive{background:#1e1b2e;color:#94a3b8;}
+    .content{max-width:900px;margin:0 auto;padding:20px 24px;}
+    .card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:24px;margin-bottom:16px;}
+    .card h2{font-size:20px;font-weight:600;margin-bottom:4px;}
+    .card p{color:#94a3b8;font-size:14px;margin-bottom:20px;}
+    label{font-size:13px;color:#94a3b8;display:block;margin-bottom:6px;}
+    input,textarea{background:#1f2937;border:1px solid #374151;border-radius:8px;padding:10px 14px;color:#e2e8f0;width:100%;font-size:14px;outline:none;font-family:inherit;}
+    input:focus,textarea:focus{border-color:#7c3aed;}
+    textarea{resize:vertical;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .mb12{margin-bottom:12px;}
+    .mb16{margin-bottom:16px;}
+    .mt12{margin-top:12px;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-size:14px;}
+    .btn-purple{background:#7c3aed;color:white;}
+    .btn-purple:hover{background:#6d28d9;}
+    .btn-dark{background:#1f2937;color:#94a3b8;}
+    .btn-dark:hover{background:#374151;}
+    .result{background:#0f172a;border:1px solid #1e3a5f;border-radius:8px;padding:16px;margin-top:16px;}
+    .verdict-item{padding:10px;background:#1a1a2e;border-radius:6px;margin-bottom:8px;}
+    .verdict-item p{font-size:13px;color:#e2e8f0;margin-bottom:6px;}
+    .badge-green{background:#052e16;color:#4ade80;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+    .badge-red{background:#450a0a;color:#f87171;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+    .badge-gray{background:#1c1917;color:#d6d3d1;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;}
+    .spinner{width:18px;height:18px;border:2px solid #374151;border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .loading{display:flex;align-items:center;gap:10px;color:#94a3b8;font-size:14px;margin-top:16px;}
+    .recent-item{display:flex;align-items:center;gap:8px;padding:8px;background:#0f172a;border-radius:6px;margin-bottom:6px;}
+    .tag{font-size:11px;background:#1e1b2e;color:#a78bfa;padding:2px 8px;border-radius:4px;white-space:nowrap;}
+    .studio-link{color:#a78bfa;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+    .studio-link:hover{color:#c4b5fd;}
+    .info-box{background:#1e1b2e;border:1px solid #2d2060;border-radius:8px;padding:12px 16px;margin-top:12px;font-size:13px;color:#94a3b8;line-height:1.6;}
+    .info-box a{color:#a78bfa;}
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="logo">GL</div>
+    <span style="font-size:18px;font-weight:600;">GenLayer AI Suite</span>
+    <span class="badge">Testnet</span>
+  </div>
+  <a href="https://studio.genlayer.com" target="_blank" style="background:#7c3aed;color:white;padding:8px 20px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;">Open Studio ↗</a>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('fact',this)">🔍 Fact Checker</button>
+  <button class="tab inactive" onclick="switchTab('dispute',this)">⚖️ Dispute Resolver</button>
+  <button class="tab inactive" onclick="switchTab('rwa',this)">🏢 RWA Due Diligence</button>
+  <button class="tab inactive" onclick="switchTab('rep',this)">🛡️ Reputation Scorer</button>
+</div>
+
+<div class="content">
+
+  <!-- Fact Checker -->
+  <div id="tab-fact" class="card">
+    <h2>On-Chain Fact Checker</h2>
+    <p>Submit any claim — AI validators reach consensus and store a tamper-proof verdict on-chain.</p>
+    <label>Claim to verify</label>
+    <input id="fact-claim" placeholder="e.g. The Earth is the third planet from the Sun" />
+    <div class="row">
+      <button class="btn btn-purple" onclick="goToStudio('fact_checker','check_claim',['fact-claim'])">Submit via Studio ↗</button>
+      <button class="btn btn-dark" onclick="readFact()">Load On-Chain Results</button>
+    </div>
+    <div class="info-box">Submit goes to <a href="https://studio.genlayer.com" target="_blank">GenLayer Studio</a> where MetaMask signs the transaction directly. Results load from the live contract below.</div>
+    <div id="fact-result"></div>
+  </div>
+
+  <!-- Dispute Resolver -->
+  <div id="tab-dispute" class="card" style="display:none;">
+    <h2>AI Dispute Resolver</h2>
+    <p>Both parties submit arguments — AI validators rule on the dispute and store the verdict on-chain.</p>
+    <div class="grid2">
+      <div><label>Dispute Title</label><input id="d-title" placeholder="e.g. Freelancer Payment Dispute" /></div>
+      <div><label>Party A Name</label><input id="d-a-name" placeholder="e.g. Alice (Client)" /></div>
+    </div>
+    <div class="mb12"><label>Party A Argument</label><textarea id="d-a-arg" rows="2" placeholder="Party A's side..."></textarea></div>
+    <div class="mb12"><label>Party B Name</label><input id="d-b-name" placeholder="e.g. Bob (Freelancer)" /></div>
+    <div class="mb16"><label>Party B Argument</label><textarea id="d-b-arg" rows="2" placeholder="Party B's side..."></textarea></div>
+    <button class="btn btn-purple" onclick="goToStudio('dispute_resolver','submit_dispute',['d-title','d-a-name','d-a-arg','d-b-name','d-b-arg'])">Submit via Studio ↗</button>
+    <div class="info-box">After submitting in Studio, paste the dispute ID here to read the ruling:<br><input id="d-id" placeholder="dispute_id e.g. 0" style="margin-top:8px;width:120px;" /> <button class="btn btn-dark" style="padding:6px 14px;font-size:13px;" onclick="readDispute()">Read Ruling</button></div>
+    <div id="dispute-result"></div>
+  </div>
+
+  <!-- RWA -->
+  <div id="tab-rwa" class="card" style="display:none;">
+    <h2>RWA Due Diligence Agent</h2>
+    <p>Submit any real-world asset — AI evaluates tokenization eligibility and risk through validator consensus.</p>
+    <div class="grid2">
+      <div><label>Asset Type</label><input id="rwa-type" placeholder="e.g. Real Estate" /></div>
+      <div><label>Asset Name</label><input id="rwa-name" placeholder="e.g. Manhattan Office" /></div>
+      <div><label>Location</label><input id="rwa-location" placeholder="e.g. New York, USA" /></div>
+      <div><label>Claimed Value (USD)</label><input id="rwa-value" placeholder="e.g. 5000000" /></div>
+    </div>
+    <div class="mb12"><label>Description</label><textarea id="rwa-desc" rows="2" placeholder="Describe the asset..."></textarea></div>
+    <div class="mb16"><label>Documentation Summary</label><textarea id="rwa-docs" rows="2" placeholder="Title deed, appraisals, permits..."></textarea></div>
+    <div class="row">
+      <button class="btn btn-purple" onclick="goToStudio('rwa_due_diligence','analyze_asset',['rwa-type','rwa-name','rwa-location','rwa-value','rwa-desc','rwa-docs'])">Submit via Studio ↗</button>
+      <button class="btn btn-dark" onclick="readRWA()">Load Results</button>
+    </div>
+    <div id="rwa-result"></div>
+  </div>
+
+  <!-- Reputation -->
+  <div id="tab-rep" class="card" style="display:none;">
+    <h2>Wallet Reputation Scorer</h2>
+    <p>Submit a wallet address and its activity — AI validators score it as TRUSTED, NEUTRAL, or SUSPICIOUS.</p>
+    <div class="mb12"><label>Wallet Address</label><input id="rep-wallet" placeholder="0x..." /></div>
+    <div class="mb16"><label>On-chain Activity Description</label><textarea id="rep-activity" rows="3" placeholder="DeFi activity, governance participation, history..."></textarea></div>
+    <div class="row">
+      <button class="btn btn-purple" onclick="goToStudio('reputation_scorer','score_address',['rep-wallet','rep-activity'])">Submit via Studio ↗</button>
+      <button class="btn btn-dark" onclick="readRep()">Load Results</button>
+    </div>
+    <div id="rep-result"></div>
+  </div>
+
+  <!-- Recent Verdicts -->
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+      <h3 style="font-size:16px;font-weight:600;">Recent On-Chain Verdicts</h3>
+      <button class="btn btn-dark" style="padding:6px 14px;font-size:13px;" onclick="loadRecent()">↺ Refresh</button>
+    </div>
+    <div id="recent-list"><p style="color:#4b5563;font-size:14px;">Loading from chain...</p></div>
+  </div>
+
+</div>
+
+<script>
+const RPC = 'https://studio.genlayer.com/api';
+const CONTRACTS = {
+  fact:    '0x054928acd6F6817e5AEFc532E8291290bC26140A',
+  dispute: '0x59682430f784c97b8Afd0B440806317865d25EC9',
+  rwa:     '0xB4014E2498F053D8e2E7223f15c072B5326d50a0',
+  rep:     '0x8076B583367B2cDa75cB1D5e2F1b6773081398b8',
+};
+const STUDIO = 'https://studio.genlayer.com/run-debug';
+
+function switchTab(tab, btn) {
+  ['fact','dispute','rwa','rep'].forEach(t => document.getElementById('tab-'+t).style.display='none');
+  document.querySelectorAll('.tab').forEach(b => { b.className='tab inactive'; });
+  document.getElementById('tab-'+tab).style.display='block';
+  btn.className='tab active';
+}
+
+function badge(v) {
+  if (!v) return '';
+  const val = v.toUpperCase();
+  const green = ['TRUE','APPROVED','TRUSTED','ELIGIBLE','PARTY_A','PARTY_B'];
+  const red = ['FALSE','REJECTED','SUSPICIOUS','NOT_ELIGIBLE'];
+  if (green.includes(val)) return `<span class="badge-green">${val}</span>`;
+  if (red.includes(val)) return `<span class="badge-red">${val}</span>`;
+  return `<span class="badge-gray">${val}</span>`;
+}
+
+function loading(id) {
+  document.getElementById(id).innerHTML = '<div class="loading"><div class="spinner"></div>Loading from chain...</div>';
+}
+
+function showResult(id, html) {
+  document.getElementById(id).innerHTML = '<div class="result">'+html+'</div>';
+}
+
+// Go to Studio with pre-filled info
+function goToStudio(contract, method, fieldIds) {
+  const vals = fieldIds.map(id => document.getElementById(id)?.value?.trim() || '');
+  const params = new URLSearchParams({ contract, method });
+  vals.forEach((v, i) => params.append('arg'+i, v));
+  window.open(STUDIO + '?' + params.toString(), '_blank');
+}
+
+// GenLayer RPC call
+async function glRead(address, method) {
+  try {
+    const res = await fetch(RPC, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({jsonrpc:'2.0',id:1,method:'gen_call',params:[{to:address,data:{method,args:[]}},  'latest']})
+    });
+    const json = await res.json();
+    if (json.result) {
+      try { return JSON.parse(json.result); } catch { return json.result; }
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+async function readFact() {
+  loading('fact-result');
+  const data = await glRead(CONTRACTS.fact, 'get_all_claims');
+  if (!data) { showResult('fact-result', '❌ Could not load. Try refreshing.'); return; }
+  let html = '<p style="font-size:13px;color:#94a3b8;margin-bottom:12px;">On-chain fact-check results:</p>';
+  const vals = Object.values(data);
+  if (!vals.length) { html += '<p style="color:#4b5563;">No claims yet.</p>'; }
+  vals.slice(-5).forEach(item => {
+    if (!item.claim) return;
+    const r = item.result || {};
+    html += `<div class="verdict-item"><p>"${item.claim}"</p><div style="display:flex;align-items:center;gap:8px;">${badge(r.verdict)}<span style="font-size:12px;color:#94a3b8;">${r.explanation||''}</span></div></div>`;
+  });
+  showResult('fact-result', html);
+}
+
+async function readDispute() {
+  const id = document.getElementById('d-id').value.trim() || '0';
+  loading('dispute-result');
+  const data = await glRead(CONTRACTS.dispute, 'get_all_disputes');
+  if (!data || !data[id]) { showResult('dispute-result', '❌ Dispute not found.'); return; }
+  const d = data[id];
+  const r = d.ruling || {};
+  showResult('dispute-result', `
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:8px;">${d.title||''}</p>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">${badge(r.winner)}<span style="font-size:12px;color:#6b7280;">${r.confidence||''} confidence</span></div>
+    <p style="font-size:13px;color:#94a3b8;">${r.reasoning||''}</p>
+  `);
+}
+
+async function readRWA() {
+  loading('rwa-result');
+  const data = await glRead(CONTRACTS.rwa, 'get_all_assets');
+  if (!data) { showResult('rwa-result', '❌ Could not load.'); return; }
+  let html = '<p style="font-size:13px;color:#94a3b8;margin-bottom:12px;">RWA analyses:</p>';
+  const vals = Object.values(data);
+  if (!vals.length) { html += '<p style="color:#4b5563;">No assets yet.</p>'; }
+  vals.slice(-3).forEach(item => {
+    const a = item.analysis || {};
+    html += `<div class="verdict-item"><p>${item.asset_name||''} — ${item.asset_type||''}</p><div style="display:flex;align-items:center;gap:8px;">${badge(a.tokenization_verdict)}${badge(a.risk_rating)}<span style="font-size:12px;color:#94a3b8;">${a.reasoning||''}</span></div></div>`;
+  });
+  showResult('rwa-result', html);
+}
+
+async function readRep() {
+  loading('rep-result');
+  const data = await glRead(CONTRACTS.rep, 'get_all_scores');
+  if (!data) { showResult('rep-result', '❌ Could not load.'); return; }
+  let html = '<p style="font-size:13px;color:#94a3b8;margin-bottom:12px;">Reputation scores:</p>';
+  const vals = Object.values(data);
+  if (!vals.length) { html += '<p style="color:#4b5563;">No scores yet.</p>'; }
+  vals.slice(-5).forEach(item => {
+    const r = item.result || {};
+    html += `<div class="verdict-item"><p style="color:#a78bfa;">${(item.wallet||'').slice(0,14)}...${(item.wallet||'').slice(-6)}</p><div style="display:flex;align-items:center;gap:8px;">${badge(r.score)}<span style="font-size:12px;color:#94a3b8;">${r.reasoning||''}</span></div></div>`;
+  });
+  showResult('rep-result', html);
+}
+
+async function loadRecent() {
+  const el = document.getElementById('recent-list');
+  const [factData, repData] = await Promise.all([
+    glRead(CONTRACTS.fact, 'get_all_claims'),
+    glRead(CONTRACTS.rep, 'get_all_scores'),
+  ]);
+  let html = '';
+  if (factData) {
+    Object.values(factData).slice(-3).forEach(item => {
+      if (!item.claim) return;
+      const r = item.result||{};
+      html += `<div class="recent-item"><span class="tag">FACT</span>${badge(r.verdict)}<span style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${item.claim}</span></div>`;
+    });
+  }
+  if (repData) {
+    Object.values(repData).slice(-3).forEach(item => {
+      if (!item.wallet) return;
+      const r = item.result||{};
+      html += `<div class="recent-item"><span class="tag">REP</span>${badge(r.score)}<span style="font-size:13px;">${item.wallet.slice(0,10)}...${item.wallet.slice(-6)}</span></div>`;
+    });
+  }
+  el.innerHTML = html || '<p style="color:#4b5563;font-size:14px;">No verdicts yet.</p>';
+}
+
+loadRecent();
+</script>
+</body>
 </html>
